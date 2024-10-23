@@ -17,15 +17,11 @@ class TestLeafNode(unittest.TestCase):
     def test_to_html_tag(self):
         node = LeafNode("p", "test")
         expected = "<p>test</p>"
-        print(node.to_html())
-        print(expected)
         self.assertEqual(node.to_html(), expected)
 
     def test_to_html_tag_props(self):
         node = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
         expected = '<a href="https://www.google.com">Click me!</a>'
-        print(node.to_html())
-        print(expected)
         self.assertEqual(node.to_html(), expected)
 
 
