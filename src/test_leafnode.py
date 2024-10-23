@@ -5,31 +5,29 @@ from leafnode import LeafNode
 
 class TestLeafNode(unittest.TestCase):
     def test_eq_blank(self):
-        node = LeafNode()
-        node2 = LeafNode()
+        node = LeafNode(value="value")
+        node2 = LeafNode(value="value")
         self.assertEqual(node, node2)
 
-    def test_eq_full(self):
-        children = [HTMLNode()]
-        props = {}
-        props["href"] = "https://www.google.com"
-        props["target"] = "_blank"
-        node1 = HTMLNode("p", "This is a HTML node", children, props)
-        node2 = HTMLNode("p", "This is a HTML node", children, props)
-        self.assertEqual(node1, node2)
+    def test_to_html_no_tag(self):
+        node = LeafNode(value="test")
+        expected = "test"
+        self.assertEqual(node.to_html(), expected)
 
-    def test_to_html(self):
-        expected = "HTMLNode(None, None, None, None)"
-        node = HTMLNode()
-        self.assertEqual(expected, node.__repr__())
-    
-    def test_props_to_html(self):
-        props = {}
-        props["href"] = "https://www.google.com"
-        props["target"] = "_blank"
-        node = HTMLNode(None, None, None, props)
-        expected = ' href="https://www.google.com" target="_blank"'
-        self.assertEqual(expected, node.props_to_html())
+    def test_to_html_tag(self):
+        node = LeafNode("p", "test")
+        expected = "<p>test</p>"
+        print(node.to_html())
+        print(expected)
+        self.assertEqual(node.to_html(), expected)
+
+    def test_to_html_tag_props(self):
+        node = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
+        expected = '<a href="https://www.google.com">Click me!</a>'
+        print(node.to_html())
+        print(expected)
+        self.assertEqual(node.to_html(), expected)
+
 
 if __name__ == "__main__":
     unittest.main()
