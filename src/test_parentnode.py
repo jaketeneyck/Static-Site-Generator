@@ -34,6 +34,6 @@ class TestHTMLNode(unittest.TestCase):
         
         expected = '<p><b>Bold text</b>Normal text<i>italic text</i>Normal text<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p></p>'
         self.assertEqual(expected, node.to_html())
-
+        
 if __name__ == "__main__":
     unittest.main()
