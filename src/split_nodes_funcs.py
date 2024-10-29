@@ -14,13 +14,13 @@ def split_nodes_image(old_nodes):
         elif len(image_props) == 1: # case for 1 image found
             sections = node.text.split(f"![{image_props[0][0]}]({image_props[0][1]})", 1)
             results = [
-                TextNode(sections[0], "normal"),
+                TextNode(sections[0], TextType.NORMAL),
                 TextNode(image_props[0][0], TextType.IMAGE, image_props[0][1]),
-                TextNode(sections[1], "normal")
+                TextNode(sections[1], TextType.NORMAL)
             ]
             # Ensure no nodes with no text are added
             for r in results:
-                if r.text != None:
+                if r.text != None and r.text != "":
                     new_nodes.append(r)
 
         else: # case for more than 1 image found
@@ -36,11 +36,14 @@ def split_nodes_image(old_nodes):
                 sections = sections[0].split(f"![{image_props[i][0]}]({image_props[i][1]})", 1)
                 results.append(TextNode(sections[0], TextType.NORMAL))
                 results.append(TextNode(image_props[i][0], TextType.IMAGE, image_props[i][1]))
+            
+            # Add the last chunk of text if the image node comes first
+            if len(sections) == 2:
+                results.append(TextNode(sections[1], TextType.NORMAL))
 
             # Ensure no nodes with no text are added
-            print(results)
             for r in results:
-                if r.text != None:
+                if r.text != None and r.text != "":
                     new_nodes.append(r)
     return new_nodes
 
