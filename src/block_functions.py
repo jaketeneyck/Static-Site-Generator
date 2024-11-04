@@ -21,7 +21,7 @@ def block_to_block_type(block):
         return "HEADING"
     elif re.search(r"\A```.*```", block, re.DOTALL) != None: # code
         return "CODE"
-    elif re.search(r"\A\>.*", block, re.MULTILINE) != None: # quotes
+    elif is_quote(block): # quotes
         return "QUOTE"
     elif is_unordered_list(block): # unordered list
         return "UNORDERED_LIST"
@@ -29,6 +29,15 @@ def block_to_block_type(block):
         return "ORDERED_LIST"
     else:
         return "PARAGRAPH"
+    
+def is_quote(block):
+    lines = block.splitlines()
+    for line in lines:
+        if line.strip() == "":
+            return False  # Blank lines break the continuity
+        if not line.lstrip().startswith(">"):
+            return False
+    return True
     
 def is_unordered_list(block):
     lines = block.splitlines()

@@ -54,6 +54,14 @@ class TestBlockFunctions(unittest.TestCase):
         expected = "QUOTE"
         self.assertEqual(result, expected)
 
+    def test_block_to_block_type_quotes_error(self):
+        result = block_to_block_type('''>This a multi line quote
+                                     
+
+                                     >Hopefully this works''')
+        expected = "PARAGRAPH"
+        self.assertEqual(result, expected)
+
     def test_block_to_block_type_unordered_1(self):
         result = block_to_block_type('''- This is an unordered list
                                      - with
