@@ -2,12 +2,7 @@ from textnode import *
 from htmlnode import HTMLNode
 from leafnode import LeafNode
 
-def text_node_to_html_node(text_node):
-    # print(f"Text Node content: {text_node.text}")
-    # print(f"Text Node type: {text_node.text_type}")
-    # print(f"Is TextType.NORMAL? {text_node.text_type == TextType.NORMAL}")
-    # print(f"Available TextTypes: {list(TextType)}")
-        
+def text_node_to_html_node(text_node):   
     match text_node.text_type:
         case TextType.NORMAL:
             return LeafNode(value=text_node.text)
