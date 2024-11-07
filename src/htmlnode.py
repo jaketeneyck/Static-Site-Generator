@@ -18,7 +18,10 @@ class HTMLNode():
         return return_string
     
     def __eq__(self, other):
-        return self.tag == other.tag and self.value == other.value and self.children == other.children and self.props == other.props
+        if isinstance(other, HTMLNode):
+            return self.tag == other.tag and self.value == other.value and self.children == other.children and self.props == other.props
+        raise ValueError("Tried to equate HTMLNode and non-HTMLNode objects")
 
+    
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, {self.children}, {self.props})"
