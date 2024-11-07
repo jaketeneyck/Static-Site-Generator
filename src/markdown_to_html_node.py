@@ -26,7 +26,7 @@ def block_to_node(block, block_type):
         case "HEADING":
             return heading_node(block)
         case "CODE":
-            return ParentNode("pre", ParentNode("code", children))
+            return code_node(block)
         case "QUOTE":
             return ParentNode("blockquote", children)
         case "UNORDERED_LIST":
@@ -49,18 +49,31 @@ def text_to_children(text):
     return children  
 
 
+def collect_html_tags(nodes):
+    value = ""
+    for node in nodes:
+        if isinstance(node, LeafNode):
+            value += node.to_html()
+        else:
+            value += node
+
+    return value
+
+
 def heading_node(block):
     children = text_to_children(block)
     count = block.count("#") # get number of hashtags for what level header it is
     value = children[0].value.replace("#", "")
     temp = block.replace("#", "", count).strip()
     children = text_to_children(temp)
-    for i in range(1, len(children)):
-        if isinstance(children[i], LeafNode):
-            value += children[i].to_html()
-        else:
-            value += children[i]
+    value = collect_html_tags(children[1:])
     return HTMLNode(f"h{count}", value, children)
+
+
+def code_node(block):
+    children = text_to_children(block)
+    value = collect_html_tags(children)
+    return HTMLNode("pre", None, [HTMLNode("code", None, [HTMLNode(None, f'"{value}"', None, None)])])
 
 
 def unordered_list_node(block):
@@ -69,13 +82,10 @@ def unordered_list_node(block):
     for line in lines:
         content = line.lstrip(' -').strip()
         content = content.lstrip(' *').strip()
-        print(f"Processing line content: {content}")
         if content:
             children = text_to_children(content)
             nodes.append(HTMLNode("li", None, children))
         
-    for node in nodes:
-        print(f"{node}\n")
     return ParentNode("ul", nodes)
 
 
@@ -85,22 +95,15 @@ def ordered_list_node(block):
     for line in lines:
         content = re.sub(r'^\s*\d+\.\s?', '', line)
         content.lstrip()
-        print(f"Processing line content: {content}")
         if content:
             children = text_to_children(content)
             nodes.append(HTMLNode("li", None, children))
         
-    for node in nodes:
-        print(f"{node}\n")
     return ParentNode("ol", nodes)
 
 
 def main(): # for testing
-    # input = "This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
-    # input = "## This is an h2 *heading* tag"
-    input = '''1. First item
-    2. second item
-    3. third item'''
-    print(block_to_node(input, "ORDERED_LIST"))
+    input = "This is **bold** and `code`"
+    print(block_to_node(input, "CODE"))
 
-main()
+# main()
