@@ -19,4 +19,4 @@ def text_to_textnodes(text):
     nodes = split_nodes_link(split_nodes_image(code_processed))
 
     # Filter out any nodes with empty text before returning
-    return [node for node in nodes if node.text != ""]
+    return [node for node in nodes if isinstance(node, ParentNode) or (isinstance(node, TextNode) and node.text != "")]

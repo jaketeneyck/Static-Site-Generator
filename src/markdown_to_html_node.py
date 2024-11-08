@@ -19,22 +19,19 @@ def markdown_to_html_node(markdown):
 
 
 def block_to_node(block, block_type):
-    # create the children list using text_to_children()
-    children = text_to_children(block)
-
     match block_type:
         case "HEADING":
             return heading_node(block)
         case "CODE":
             return code_node(block)
         case "QUOTE":
-            return ParentNode("blockquote", children)
+            return quote_node(block)
         case "UNORDERED_LIST":
             return unordered_list_node(block)
         case "ORDERED_LIST":
             return ordered_list_node(block)
         case "PARAGRAPH":
-            return ParentNode("p", children)
+            return ParentNode("p", text_to_children(block))
         case _:
             raise Exception("Invalid block type")
 
@@ -61,20 +58,28 @@ def collect_html_tags(nodes):
 
 
 def heading_node(block):
-    children = text_to_children(block)
     count = block.count("#") # get number of hashtags for what level header it is
-    value = children[0].value.replace("#", "")
     temp = block.replace("#", "", count).strip()
     children = text_to_children(temp)
-    value = collect_html_tags(children[1:])
-    return HTMLNode(f"h{count}", value, children)
+    return HTMLNode(f"h{count}", None, children)
 
 
 def code_node(block):
     children = text_to_children(block)
     value = collect_html_tags(children)
-    return HTMLNode("pre", None, [HTMLNode("code", None, [HTMLNode(None, f'"{value}"', None, None)])])
+    return HTMLNode("pre", None, [HTMLNode("code", value, children)])
 
+
+def quote_node(block):
+    lines = block.splitlines()
+    new_lines = []
+
+    # clean the lines of all > characters before splitting the text for child tags
+    for line in lines:
+        new_lines.append(line.lstrip(">").lstrip())
+    content = " ".join(new_lines)
+    children = text_to_children(content)
+    return HTMLNode("blockquote", None, children)
 
 def unordered_list_node(block):
     nodes = []
@@ -100,10 +105,3 @@ def ordered_list_node(block):
             nodes.append(HTMLNode("li", None, children))
         
     return ParentNode("ol", nodes)
-
-
-def main(): # for testing
-    input = "This is **bold** and `code`"
-    print(block_to_node(input, "CODE"))
-
-# main()
