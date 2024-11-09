@@ -6,6 +6,13 @@ from leafnode import *
 from textnode import *
 import re
 
+block_type_paragraph = "PARAGRAPH"
+block_type_heading = "HEADING"
+block_type_code = "CODE"
+block_type_quote = "QUOTE"
+block_type_olist = "ORDERED_LIST"
+block_type_ulist = "UNORDERED_LIST"
+
 def markdown_to_html_node(markdown):
     nodes = [] # main list of nodes to be returned at the end
 

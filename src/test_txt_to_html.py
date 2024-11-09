@@ -13,13 +13,13 @@ class TestTextToHTML(unittest.TestCase):
     def test_bold(self):
         node = TextNode("Testing text node", TextType.BOLD)
         html = text_node_to_html_node(node)
-        expected = "<b>Testing text node</b>"
+        expected = "<strong>Testing text node</strong>"
         self.assertEqual(expected, html.to_html())
 
     def test_italic(self):
         node = TextNode("Testing text node", TextType.ITALIC)
         html = text_node_to_html_node(node)
-        expected = "<i>Testing text node</i>"
+        expected = "<em>Testing text node</em>"
         self.assertEqual(expected, html.to_html())
 
     def test_code(self):
